@@ -36,23 +36,46 @@ const TransactionSchema = new mongoose.Schema({
 
 const TransactionModel = mongoose.model("Transaction", TransactionSchema);
 
+// const allowedOrigins = [
+//     process.env.FRONTEND_URL || 'http://localhost:5173', 
+//     'http://localhost:3000',
+//     'http://localhost:5174'
+// ]; 
+
 const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5173', 
-    'http://localhost:3000',
-    'http://localhost:5174'
-]; 
+    process.env.FRONTEND_URL, // https://pex3-mu.vercel.app
+    'http://localhost:5174',  // Localhost do React
+    // Adicione outras portas locais se necessário
+];
+
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     // Permite requisições sem origem (como apps mobile ou curl)
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+// };
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Permite requisições sem origem (como apps mobile ou curl)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+    origin: (origin, callback) => {
+        // Se a origem da requisição for permitida OU se for uma requisição sem origem (como apps mobile/curl)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            // Se a origem não estiver na lista
+            console.log(`CORS blocked: ${origin}`); // Isso aparecerá nos logs do Render
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
 };
 
+// app.use(cors(corsOptions));
+app.use(express.json());
 app.use(cors(corsOptions));
 
 // 3. API Routes
