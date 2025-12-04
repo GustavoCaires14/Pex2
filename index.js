@@ -45,6 +45,7 @@ const TransactionModel = mongoose.model("Transaction", TransactionSchema);
 const allowedOrigins = [
     process.env.FRONTEND_URL, // https://pex3-mu.vercel.app
     'http://localhost:5174',  // Localhost do React
+    'https://pex3-c753uk23f-gustavo-caires-souzas-projects.vercel.app',
     // Adicione outras portas locais se necessário
 ];
 
